@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Blood Donor Finder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleDarkMode()">🌙 Dark</button>
+
+    <main class="container">
+        
+        <section id="landing-page" class="auth-card page-view landing-card">
+            <div class="landing-header">
+                <div class="icon-header">🩸</div>
+                <h2>Emergency Blood Finder</h2>
+                <p class="subtitle">Smart, Real-Time Blood Matching & Automated Alerts.</p>
+            </div>
+            <div class="stickers-container">
+                <div class="cute-sticker"><span class="sticker-icon">🦸‍♀️</span><span class="sticker-title">Save Lives</span><span class="sticker-desc">Match with local hospitals instantly.</span></div>
+                <div class="cute-sticker"><span class="sticker-icon">📊</span><span class="sticker-title">Smart Stock</span><span class="sticker-desc">Auto-alerts when blood levels are low.</span></div>
+                <div class="cute-sticker"><span class="sticker-icon">🏆</span><span class="sticker-title">Earn Badges</span><span class="sticker-desc">Get verified as a neighborhood hero.</span></div>
+            </div>
+            <div class="button-group" style="flex-direction: row; justify-content: center;">
+                <button type="button" class="btn btn-primary" onclick="showPage('donor-options')">I am a Donor ❤️</button>
+                <button type="button" class="btn btn-secondary" onclick="showPage('hospital-options')">I am a Hospital 🏥</button>
+            </div>
+        </section>
+
+        <section id="donor-options" class="auth-card page-view hidden">
+            <div class="icon-header">❤️</div>
+            <h2>Donor Portal</h2>
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" onclick="showPage('donor-login')">Donor Login</button>
+                <button type="button" class="btn btn-primary" onclick="showPage('donor-register')">Donor Registration</button>
+                <button type="button" class="btn btn-outline" onclick="showPage('landing-page')">⬅ Back to Home</button>
+            </div>
+        </section>
+
+        <section id="hospital-options" class="auth-card page-view hidden">
+            <div class="icon-header">🏥</div>
+            <h2>Hospital Portal</h2>
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="showPage('hospital-login')">Hospital Login</button>
+                <button type="button" class="btn btn-secondary" onclick="showPage('hospital-register')">Hospital Registration</button>
+                <button type="button" class="btn btn-outline" onclick="showPage('landing-page')">⬅ Back to Home</button>
+            </div>
+        </section>
+
+        <section id="donor-register" class="auth-card page-view hidden">
+            <h2>Donor Registration</h2>
+            <form id="donorRegForm">
+                <div class="file-upload-wrapper">
+                    <label class="file-label">Upload Profile Picture 📸</label>
+                    <input type="file" id="profilePic" accept="image/*" class="cute-file-input" required>
+                </div>
+                <input type="text" id="donorRegName" placeholder="Full Name" required>
+                <select id="donorRegBlood" required>
+                    <option value="">Select Blood Group</option>
+                    <option value="A+">A+</option><option value="A-">A-</option><option value="B+">B+</option><option value="B-">B-</option>
+                    <option value="AB+">AB+</option><option value="AB-">AB-</option><option value="O+">O+</option><option value="O-">O-</option>
+                </select>
+                <input type="tel" id="donorRegPhone" placeholder="Phone Number" required>
+                <input type="password" id="donorRegPass" placeholder="Create Password" required>
+                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="button" class="btn btn-outline" onclick="showPage('donor-options')">Cancel</button>
+            </form>
+        </section>
+
+        <section id="donor-login" class="auth-card page-view hidden">
+            <h2>Donor Login</h2>
+            <form onsubmit="handleDonorLogin(event)">
+                <input type="tel" id="donorLoginPhone" placeholder="Phone Number" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="button" class="btn btn-outline" onclick="showPage('donor-options')">Cancel</button>
+            </form>
+        </section>
+
+        <section id="hospital-register" class="auth-card page-view hidden">
+            <h2>Hospital Registration</h2>
+            <form onsubmit="handleHospitalRegistration(event)">
+                <input type="text" id="hospRegName" placeholder="Hospital Name" required>
+                <input type="password" placeholder="Create Password" required>
+                <button type="submit" class="btn btn-secondary">Register</button>
+                <button type="button" class="btn btn-outline" onclick="showPage('hospital-options')">Cancel</button>
+            </form>
+        </section>
+
+        <section id="hospital-login" class="auth-card page-view hidden">
+            <h2>Hospital Login</h2>
+            <form onsubmit="handleHospitalLogin(event)">
+                <input type="text" id="hospLoginName" placeholder="Hospital Name" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit" class="btn btn-secondary">Login</button>
+                <button type="button" class="btn btn-outline" onclick="showPage('hospital-options')">Cancel</button>
+            </form>
+        </section>
+
+        <section id="hospital-dashboard" class="dashboard-card page-view hidden">
+            <h2 id="hospDashboardTitle">Hospital Dashboard</h2>
+            <div class="dashboard-section">
+                <h3>🩸 Blood Bank Live Inventory</h3>
+                <p class="subtitle">System will auto-broadcast if stock falls below 2 units.</p>
+                <div id="inventoryGrid" class="inventory-grid"></div>
+            </div>
+            <div class="dashboard-section" style="margin-top: 2rem;">
+                <h3>🚨 Manual Emergency Broadcast</h3>
+                <form onsubmit="submitEmergency(event)">
+                    <select id="urgencyLevel" required><option value="Critical">🔴 Critical</option><option value="High">🟠 High</option></select>
+                    <select id="reqBloodGroup" required><option value="A+">A+</option><option value="O+">O+</option><option value="B+">B+</option><option value="AB+">AB+</option><option value="A-">A-</option><option value="O-">O-</option><option value="B-">B-</option><option value="AB-">AB-</option></select>
+                    <input type="number" id="unitsNeeded" placeholder="Units Needed" required min="1">
+                    <button type="submit" class="btn btn-primary">Broadcast Alert 🚨</button>
+                </form>
+            </div>
+            <div class="dashboard-section" style="margin-top: 2rem;">
+                <h3>📋 Active Requests & Donors</h3>
+                <div id="hospitalActiveRequests" class="data-list"></div>
+            </div>
+            <button type="button" class="btn btn-outline" onclick="logout()">Log Out</button>
+        </section>
+
+        <section id="donor-dashboard" class="dashboard-card page-view hidden">
+            <h2>Donor Control Panel</h2>
+            <div class="dashboard-section">
+                <button type="button" class="btn btn-secondary" style="margin-bottom: 1.5rem;" onclick="openProfileModal()">👤 My Profile & Badges</button>
+                
+                <div id="activeMissionBox" class="hidden" style="margin-bottom: 2rem; border: 2px dashed var(--ruby-main); padding: 1.5rem; border-radius: 20px; background: white;">
+                    <h3>🚑 Active Mission</h3>
+                    <p id="missionDetails" style="font-weight: 700;">Hospital: ...</p>
+                    <div style="border-radius: 15px; overflow: hidden; border: 2px solid var(--border-pink); margin: 10px 0; height: 150px;">
+                        <iframe id="googleMap" width="100%" height="100%" frameborder="0" src=""></iframe>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-small" onclick="openCancelModal()">Cancel</button>
+                </div>
+
+                <h3 id="matchedAlertsTitle">🚨 Matching Emergencies</h3>
+                <div id="emergencyList" class="data-list"></div>
+            </div>
+            <button type="button" class="btn btn-outline" onclick="logout()">Log Out</button>
+        </section>
+    </main>
+
+    <div id="profileModal" class="modal hidden">
+        <div class="modal-content auth-card">
+            <h2>My Profile</h2>
+            <img id="profileImageDisplay" src="" class="avatar-large">
+            <h3 id="profileName"></h3>
+            <div class="blood-badge" id="profileBlood"></div>
+            <h3 style="margin-top:15px; color: var(--ruby-main);">🏆 My Badges</h3>
+            <div id="profileBadges"></div>
+            <h3 style="margin-top:15px; color: var(--ruby-main);">📜 History</h3>
+            <div id="profileHistory"></div>
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('profileModal').classList.add('hidden')">Close</button>
+        </div>
+    </div>
+
+    <div id="screeningModal" class="modal hidden">
+        <div class="modal-content auth-card" style="max-width: 450px;">
+            <div class="icon-header">🩺</div>
+            <h2 style="font-size: 1.5rem;">Smart Screening</h2>
+            <p class="subtitle" style="margin-bottom: 1rem;">Please answer honestly to ensure patient safety.</p>
+            <form onsubmit="processScreening(event)" style="gap: 0.5rem;">
+                <div style="text-align: left;">
+                    <label style="font-size: 0.85rem;">1. Are you currently sick?</label>
+                    <select id="q1" required style="padding: 0.5rem; border-radius: 10px;"><option value="">Select Answer</option><option value="yes">Yes</option><option value="no">No</option></select>
+                </div>
+                <div style="text-align: left;">
+                    <label style="font-size: 0.85rem;">2. Have you had a fever in the last 7 days?</label>
+                    <select id="q2" required style="padding: 0.5rem; border-radius: 10px;"><option value="">Select Answer</option><option value="yes">Yes</option><option value="no">No</option></select>
+                </div>
+                <div style="text-align: left;">
+                    <label style="font-size: 0.85rem;">3. Do you have any recent infections?</label>
+                    <select id="q3" required style="padding: 0.5rem; border-radius: 10px;"><option value="">Select Answer</option><option value="yes">Yes</option><option value="no">No</option></select>
+                </div>
+                <div style="text-align: left;">
+                    <label style="font-size: 0.85rem;">4. Any surgeries or tattoos recently?</label>
+                    <select id="q4" required style="padding: 0.5rem; border-radius: 10px;"><option value="">Select Answer</option><option value="yes">Yes</option><option value="no">No</option></select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 15px;">Confirm & Donate</button>
+                <button type="button" class="btn btn-outline" onclick="closeScreening()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="cancelModal" class="modal hidden">
+        <div class="modal-content auth-card">
+            <h2>Cancel Mission</h2>
+            <p>Why do you need to cancel?</p>
+            <select id="cancelReason"><option value="Health Issue">Health issue</option><option value="Travel Issue">Unable to travel</option><option value="Personal">Personal Emergency</option></select>
+            <button type="button" class="btn btn-primary" style="margin-top: 15px;" onclick="processCancel()">Confirm Cancel</button>
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('cancelModal').classList.add('hidden')">Go Back</button>
+        </div>
+    </div>
+
+    <script>
+        let currentMissionId = null; 
+        let currentHospitalContext = ""; 
+        let syncInterval = null;
+
+        function showPage(pageId) { 
+            document.querySelectorAll('.page-view').forEach(p => p.classList.add('hidden')); 
+            const target = document.getElementById(pageId);
+            if(target) target.classList.remove('hidden'); 
+        }
+        
+        function toggleDarkMode() { 
+            document.body.classList.toggle('dark-mode'); 
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            document.getElementById('themeToggleBtn').innerText = isDark ? '☀️ Light' : '🌙 Dark';
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('themeToggleBtn').innerText = '☀️ Light';
+        }
+
+        // --- DONOR LOGIC ---
+        function convertToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result); reader.onerror = error => reject(error);
+            });
+        }
+
+        document.getElementById('donorRegForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const file = document.getElementById('profilePic').files[0];
+            const profilePicString = file ? await convertToBase64(file) : "";
+            
+            const data = { name: document.getElementById('donorRegName').value, bloodGroup: document.getElementById('donorRegBlood').value, phone: document.getElementById('donorRegPhone').value, profilePic: profilePicString };
+            
+            fetch('/api/register-donor', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) })
+            .then(() => { e.target.reset(); showPage('donor-login'); })
+            .catch(err => alert("Server error! Make sure your Python server is running."));
+        });
+
+        function handleDonorLogin(e) {
+            e.preventDefault();
+            const phoneVal = document.getElementById('donorLoginPhone').value;
+            fetch('/api/login-donor', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: phoneVal}) })
+            .then(res => res.json()).then(data => {
+                if(data.status==='success'){
+                    localStorage.setItem('currentDonorPhone', data.donor.phone); localStorage.setItem('currentDonorBlood', data.donor.blood_group);
+                    
+                    // FIXED: Ensure the active mission box is hidden when logging in!
+                    document.getElementById('activeMissionBox').classList.add('hidden');
+                    document.getElementById('googleMap').src = "";
+                    currentMissionId = null;
+                    currentHospitalContext = "";
+
+                    e.target.reset(); showPage('donor-dashboard'); fetchEmergencies();
+                } else {
+                    alert(data.message + " (Did you restart your Python server? If so, you need to Register your account again!)");
+                }
+            }).catch(err => alert("Network error! Is Python running?"));
+        }
+
+        function fetchEmergencies() {
+            const bg = localStorage.getItem('currentDonorBlood');
+            fetch('/api/get-emergencies', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({bloodGroup: bg}) })
+            .then(res => res.json()).then(data => {
+                const list = document.getElementById('emergencyList'); list.innerHTML = '';
+                if(data.emergencies.length === 0) { list.innerHTML = '<p class="subtitle">No emergencies matching your blood type. ❤️</p>'; return; }
+                data.emergencies.forEach(req => {
+                    list.innerHTML += `<div class="cute-donor-card alert-card"><div><strong>${req.hospitalName}</strong><br><small>${req.urgency}</small></div><div class="blood-badge">${req.bloodGroup}</div><button type="button" class="btn btn-primary btn-small" onclick="openScreening(${req.id}, '${req.hospitalName}')">Accept</button></div>`;
+                });
+            });
+        }
+
+        function openScreening(id, hosp) { currentMissionId = id; currentHospitalContext = hosp; document.getElementById('screeningModal').classList.remove('hidden'); }
+        function closeScreening() { document.getElementById('screeningModal').classList.add('hidden'); }
+        
+        function processScreening(e) {
+            e.preventDefault();
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+            const q4 = document.getElementById('q4').value;
+
+            if(q1 === 'yes' || q2 === 'yes' || q3 === 'yes' || q4 === 'yes') { 
+                alert("Please take care! You are not eligible to donate today."); 
+                closeScreening(); 
+                return; 
+            }
+            fetch('/api/accept-emergency', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: currentMissionId, donorPhone: localStorage.getItem('currentDonorPhone')}) })
+            .then(() => {
+                document.getElementById('activeMissionBox').classList.remove('hidden'); document.getElementById('missionDetails').innerText = "Hospital: " + currentHospitalContext;
+                
+                const encodedHosp = encodeURIComponent(currentHospitalContext + " Hospital");
+                document.getElementById('googleMap').src = `https://maps.google.com/maps?q=${encodedHosp}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+                
+                document.getElementById('screeningModal').classList.add('hidden'); fetchEmergencies();
+            });
+        }
+
+        function openCancelModal() { document.getElementById('cancelModal').classList.remove('hidden'); }
+        function processCancel() {
+            const reasonVal = document.getElementById('cancelReason').value;
+            fetch('/api/cancel-emergency', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: currentMissionId, reason: reasonVal}) })
+            .then(() => {
+                document.getElementById('activeMissionBox').classList.add('hidden'); 
+                document.getElementById('cancelModal').classList.add('hidden'); 
+                document.getElementById('googleMap').src = "";
+                currentMissionId = null; 
+                currentHospitalContext = "";
+                fetchEmergencies();
+            });
+        }
+
+        // --- HOSPITAL LOGIC ---
+        function handleHospitalRegistration(e) { e.preventDefault(); e.target.reset(); showPage('hospital-login'); }
+
+        function handleHospitalLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('hospLoginName').value;
+            fetch('/api/login-hospital', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({hospitalName: name}) })
+            .then(res => res.json()).then(data => {
+                localStorage.setItem('currentHospital', data.hospitalName);
+                document.getElementById('hospDashboardTitle').innerText = data.hospitalName;
+                renderInventory(data.inventory);
+                e.target.reset(); showPage('hospital-dashboard'); fetchHospitalDashboardData();
+                syncInterval = setInterval(fetchHospitalDashboardData, 5000);
+            }).catch(err => alert("Network error! Is Python running?"));
+        }
+
+        function renderInventory(inv) {
+            const grid = document.getElementById('inventoryGrid'); grid.innerHTML = '';
+            for(let type in inv) {
+                let count = inv[type];
+                let colorClass = count < 2 ? 'bar-red' : (count < 5 ? 'bar-yellow' : 'bar-green');
+                grid.innerHTML += `
+                    <div class="inventory-item">
+                        <span class="inv-label">${type}: ${count}U</span>
+                        <div class="bar-container"><div class="bar-fill ${colorClass}" style="width: ${Math.min(count*10, 100)}%"></div></div>
+                        <div class="inv-controls">
+                            <button type="button" class="btn-inv" onclick="updateInv('${type}', 1)">+</button>
+                            <button type="button" class="btn-inv" onclick="updateInv('${type}', -1)">-</button>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        function updateInv(type, change) {
+            fetch('/api/update-inventory', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({hospitalName: localStorage.getItem('currentHospital'), bloodType: type, change: change}) })
+            .then(res => res.json()).then(data => renderInventory(data.inventory));
+        }
+
+        function fetchHospitalDashboardData() {
+            fetch('/api/hospital-emergencies', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({hospitalName: localStorage.getItem('currentHospital')}) })
+            .then(res => res.json()).then(data => {
+                const list = document.getElementById('hospitalActiveRequests'); list.innerHTML = '';
+                if(data.emergencies.length === 0) { list.innerHTML = '<p class="subtitle">No active requests.</p>'; return; }
+                data.emergencies.forEach(req => {
+                    let html = `<div class="cute-donor-card alert-card" style="border-color:${req.status==='accepted'?'green':'pink'}"><div><strong>${req.units} Units of ${req.bloodGroup}</strong><br>`;
+                    if(req.status==='accepted') {
+                        html += `<div class="hospital-donor-card">`;
+                        if(req.acceptedBy.profilePic) html += `<img src="${req.acceptedBy.profilePic}" class="avatar-small">`;
+                        html += `<div><small style="color: green; font-weight: bold;">✅ Donor Arriving:</small><br><strong>${req.acceptedBy.name}</strong><br><small>📞 ${req.acceptedBy.phone}</small></div></div></div>
+                                 <button type="button" class="btn btn-primary btn-small" style="background:#27AE60" onclick="completeDonation(${req.id})">Mark Donated 🏆</button></div>`;
+                    } else {
+                        html += `<small>⏳ Looking for donors...</small></div><button type="button" class="btn btn-secondary btn-small" onclick="hospitalCancel(${req.id})">Cancel Request</button></div>`;
+                    }
+                    list.innerHTML += html;
+                });
+            });
+        }
+
+        function submitEmergency(e) {
+            e.preventDefault();
+            const data = { hospitalName: localStorage.getItem('currentHospital'), urgency: document.getElementById('urgencyLevel').value, bloodGroup: document.getElementById('reqBloodGroup').value, units: document.getElementById('unitsNeeded').value };
+            fetch('/api/emergency', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) })
+            .then(() => { e.target.reset(); fetchHospitalDashboardData(); });
+        }
+
+        function completeDonation(id) {
+            fetch('/api/complete-donation', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: id}) })
+            .then(res => res.json()).then(data => { renderInventory(data.inventory); fetchHospitalDashboardData(); });
+        }
+
+        function hospitalCancel(id) {
+            fetch('/api/hospital-cancel', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: id}) })
+            .then(() => fetchHospitalDashboardData());
+        }
+
+        function openProfileModal() {
+            fetch('/api/donor-profile', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({phone: localStorage.getItem('currentDonorPhone')}) })
+            .then(res => res.json()).then(data => {
+                document.getElementById('profileImageDisplay').src = data.donor.profilePic || "";
+                document.getElementById('profileImageDisplay').style.display = data.donor.profilePic ? "block" : "none";
+                document.getElementById('profileName').innerText = data.donor.name;
+                document.getElementById('profileBlood').innerText = data.donor.blood_group;
+                document.getElementById('profileBadges').innerHTML = data.donor.badges.map(b => `<div style="background:#FFF4E6; color:#E67E22; padding:0.5rem; border-radius:10px; margin-top:5px; font-weight:800;">${b}</div>`).join('');
+                document.getElementById('profileHistory').innerHTML = data.donor.history.map(h => `<div style="font-size:0.8rem; border-bottom:1px solid #eee; padding:5px 0;">📅 ${h.date}: ${h.hospital} (${h.bloodGroup})</div>`).join('');
+                document.getElementById('profileModal').classList.remove('hidden');
+            });
+        }
+
+        function logout() { 
+            localStorage.clear(); 
+            clearInterval(syncInterval); 
+            document.querySelectorAll('form').forEach(f => f.reset()); 
+            
+            // FIXED: Wipes the ghost state when logging out!
+            document.getElementById('activeMissionBox').classList.add('hidden');
+            document.getElementById('googleMap').src = "";
+            currentMissionId = null;
+            currentHospitalContext = "";
+            
+            showPage('landing-page'); 
+        }
+    </script>
+</body>
+</html>
