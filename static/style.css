@@ -1,0 +1,515 @@
+/* =========================================
+   EMERGENCY BLOOD DONOR FINDER - CUTE RUBY THEME
+========================================= */
+:root {
+    --ruby-main: #E03E52;      /* Friendly Red/Pink Accent */
+    --ruby-light: #FF6B81;     /* Hover states */
+    --hospital-main: #2B2D42;  /* Dark Charcoal for Hospital Buttons */
+    --blush-bg: #FFF8F9;       /* Ultra cute light pink background */
+    --card-white: #FFFFFF;     
+    --text-dark: #2B2D42;      
+    --text-muted: #8D99AE;
+    --border-pink: #FAD2E1;    
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito', sans-serif; /* Super cute rounded font */
+}
+
+body {
+    background-color: var(--blush-bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    transition: background 0.3s ease; /* For smooth dark mode toggle */
+}
+
+/* 🌙 DARK MODE THEME */
+body.dark-mode {
+    --ruby-main: #FF6B81;      
+    --ruby-light: #FF8FA3;
+    --hospital-main: #A9B2C3;
+    --blush-bg: #121217;       /* Deep dark background */
+    --card-white: #20222F;     /* Dark card color */
+    --text-dark: #F8F9FA;      /* White text */
+    --text-muted: #A9B2C3;
+    --border-pink: #3D405B;    
+}
+
+.container {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* --- MAIN CARDS --- */
+.auth-card {
+    background: var(--card-white);
+    padding: 3rem 2rem;
+    border-radius: 30px; /* Extra rounded corners for maximum cuteness */
+    width: 100%;
+    max-width: 400px; /* Standard width for forms */
+    box-shadow: 0 15px 35px rgba(224, 62, 82, 0.08);
+    border: 2px solid var(--border-pink);
+    text-align: center;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Cute popup animation */
+@keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- 🏠 CUTE LANDING PAGE UPDATES --- */
+.landing-card {
+    max-width: 700px; /* Wider than normal auth cards to fit visuals */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+/* Sticker Section Layout */
+.stickers-container {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+/* Individual Sticker Styling */
+.cute-sticker {
+    background: #FFF0F2;
+    border: 2px solid var(--border-pink);
+    border-radius: 20px;
+    padding: 1rem;
+    width: 180px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 8px 20px rgba(224, 62, 82, 0.05);
+    transition: transform 0.3s ease;
+}
+
+/* Dark Mode adjustment for stickers */
+body.dark-mode .cute-sticker {
+    background: #2D2F3F;
+}
+
+/* Floating animation for stickers */
+.cute-sticker:nth-child(1) { animation: float 3s ease-in-out infinite; }
+.cute-sticker:nth-child(2) { animation: float 3s ease-in-out infinite 0.5s; }
+.cute-sticker:nth-child(3) { animation: float 3s ease-in-out infinite 1s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.cute-sticker:hover {
+    transform: translateY(-5px) scale(1.03);
+    border-color: var(--ruby-main);
+}
+
+.sticker-icon {
+    font-size: 2.5rem;
+    display: block;
+}
+
+.sticker-title {
+    font-weight: 800;
+    color: var(--ruby-main);
+    font-size: 1rem;
+}
+
+.sticker-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Button Group Layout for Landing Page */
+.landing-card .button-group {
+    flex-direction: row; /* Buttons side-by-side on landing page */
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 450px;
+}
+
+/* --- TYPOGRAPHY --- */
+.icon-header {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    color: var(--ruby-main);
+    font-size: 2rem; /* Slightly larger for main headlines */
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    max-width: 500px;
+}
+
+/* --- FORMS & INPUTS --- */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; 
+}
+
+input, select {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border-pink);
+    border-radius: 20px; /* Pill-shaped inputs */
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: var(--blush-bg);
+    color: var(--text-dark);
+    outline: none;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    border-color: var(--ruby-main);
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(224, 62, 82, 0.1);
+}
+
+/* Dark mode adjustment for inputs */
+body.dark-mode input, 
+body.dark-mode select,
+body.dark-mode .cute-donor-card,
+body.dark-mode .hospital-donor-card,
+body.dark-mode #activeMissionBox {
+    background-color: #121217 !important; /* Deep dark blue/grey background */
+    color: var(--text-dark) !important;
+}
+
+/* --- CUTE FILE UPLOAD STYLING --- */
+.file-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.file-label {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--ruby-main);
+}
+
+.cute-file-input {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    border-radius: 15px;
+    background-color: var(--card-white);
+    border: 2px dashed var(--border-pink);
+    cursor: pointer;
+    text-align: left; 
+}
+
+.cute-file-input::file-selector-button {
+    background-color: var(--blush-bg);
+    border: 2px solid var(--border-pink);
+    border-radius: 20px;
+    padding: 0.4rem 0.8rem;
+    color: var(--ruby-main);
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 10px;
+}
+
+.cute-file-input::file-selector-button:hover {
+    background-color: var(--ruby-main);
+    color: white;
+}
+
+/* --- CUTE BUTTONS --- */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 50px; /* Pill-shaped cute buttons */
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--ruby-main);
+    color: white;
+    box-shadow: 0 4px 15px rgba(224, 62, 82, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: var(--ruby-light);
+    transform: translateY(-3px); /* Cute bounce effect */
+}
+
+.btn-secondary {
+    background-color: var(--hospital-main);
+    color: white;
+    box-shadow: 0 4px 15px rgba(43, 45, 66, 0.1);
+}
+
+.btn-secondary:hover {
+    background-color: #4A4E69;
+    transform: translateY(-3px);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    padding: 0.5rem;
+}
+
+.btn-outline:hover {
+    color: var(--ruby-main);
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    width: auto;
+    margin-top: 0;
+}
+
+/* --- DASHBOARDS (HOSPITAL & DONOR) --- */
+.dashboard-card {
+    background: var(--card-white);
+    padding: 3rem 2rem;
+    border-radius: 30px;
+    width: 100%;
+    max-width: 600px; /* Wider to fit data cleanly */
+    box-shadow: 0 15px 35px rgba(224, 62, 82, 0.08);
+    border: 2px solid var(--border-pink);
+    text-align: center;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-height: 90vh; 
+    overflow-y: auto; /* Allows scrolling if list gets long */
+}
+
+.dashboard-section h3 {
+    color: var(--hospital-main);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+}
+
+.data-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.cute-donor-card {
+    background: var(--blush-bg);
+    border: 2px solid var(--border-pink);
+    padding: 1rem 1.5rem;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    transition: transform 0.2s ease;
+}
+
+.cute-donor-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--ruby-main);
+}
+
+.donor-info strong {
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.blood-badge {
+    background: var(--ruby-main);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 10px rgba(224, 62, 82, 0.2);
+}
+
+/* --- EMERGENCY ALERT CARDS --- */
+.alert-card {
+    border: 2px solid var(--ruby-main);
+    background-color: white;
+    display: flex;
+    flex-wrap: wrap; /* Allows the button to drop down nicely */
+    gap: 10px;
+}
+
+/* --- 🩺 SMART SCREENING MODAL (POPUP BACKGROUND) --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(43, 45, 66, 0.7); /* Dark semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Puts it on top of everything else */
+}
+
+.modal-content {
+    background-color: var(--card-white);
+    margin: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* --- CUTE PROFILE AVATARS --- */
+.avatar-small {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--ruby-main);
+    box-shadow: 0 2px 8px rgba(224, 62, 82, 0.2);
+}
+
+.avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--ruby-main);
+    margin: 0 auto 10px auto;
+    display: block;
+    box-shadow: 0 4px 15px rgba(224, 62, 82, 0.2);
+}
+
+.hospital-donor-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 15px;
+    border: 1px solid var(--border-pink);
+}
+
+/* Float button for dark mode toggle */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    padding: 10px 15px;
+    border-radius: 50px;
+    border: none;
+    background: var(--card-white);
+    color: var(--text-dark);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid var(--border-pink);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.05);
+    border-color: var(--ruby-main);
+}
+
+/* --- UTILITIES (THIS MAKES YOUR PAGE SWITCHING WORK!) --- */
+.hidden {
+    display: none !important;
+}
+/* --- 📊 INVENTORY PROGRESS BARS --- */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 2rem;
+}
+
+.inventory-item {
+    background: var(--blush-bg);
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid var(--border-pink);
+    position: relative;
+}
+
+.inv-label { font-weight: 800; font-size: 0.9rem; margin-bottom: 5px; display: block; }
+
+.bar-container {
+    width: 100%;
+    height: 12px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.bar-fill {
+    height: 100%;
+    transition: width 0.5s ease, background 0.3s ease;
+}
+
+/* Colors based on level */
+.bar-green { background: #27AE60; }
+.bar-yellow { background: #F1C40F; }
+.bar-red { background: var(--ruby-main); animation: pulseRed 1.5s infinite; }
+
+@keyframes pulseRed {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.inv-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-inv {
+    padding: 2px 8px;
+    border-radius: 5px;
+    border: 1px solid var(--border-pink);
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+}
